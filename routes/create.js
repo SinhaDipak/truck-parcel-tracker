@@ -1,0 +1,46 @@
+const router = require('express').Router();
+const ParcelModel = require('../models/parcel');
+
+router.post('/create', async (req, res) => {
+
+    const { truckname, totalparcel, parcel } = req.body;
+
+    if (!truckname || !totalparcel || !parcel) {
+        return res.status(422).send({ error: 'All fields truckname,totalparcel and parcel are required.' });
+    }
+
+
+    let parcelData = new ParcelModel({
+        truckname,
+        totalparcel,
+        parcel
+    })
+
+    await ParcelModel.find({ truckname: truckname }, async function (err, data) {//Query first if existed then dont insert
+        if (err) {
+            console.log(err)
+            return res.status(500).send({ error: 'Something went wrong.' });
+        }
+
+        if (data.length !== 0) {
+            res.status(409).send({ error: `Truck with name ${truckname} Already Existed` })
+        } else {
+            await parcelData.save()
+                .then(doc => {
+                    console.log(doc)
+                    return res.status(201).json({
+                        success: true,
+                        message: 'Truck created successfully',
+                        truckName: truckname,
+                    });
+                })
+                .catch(err => {
+                    return res.status(500).send({ error: 'Something went wrong.' })
+                })
+        }
+    })
+});
+
+
+module.exports = router;
+
