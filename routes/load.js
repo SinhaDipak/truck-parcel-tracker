@@ -4,6 +4,7 @@ const ParcelModel = require('../models/parcel');
 router.put('/load', async (req, res) => {
     const { truckname, totalparcel, parcel } = req.body;
 
+    //Check all required fields
     if (!truckname || !totalparcel || !parcel) {
         return res.status(422).send({ error: 'All fields truckname,totalparcel and parcel are required.' });
     }

@@ -5,6 +5,7 @@ router.put('/unload', async (req, res) => {
 
     const { truckname, totalparcel, unload } = req.body;
 
+    //Check all required fields
     if (!truckname || !totalparcel || !unload) {
         return res.status(422).send({ error: 'All fields truckname,totalparcel and unload are required.' });
     }

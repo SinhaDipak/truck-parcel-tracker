@@ -5,18 +5,20 @@ router.post('/create', async (req, res) => {
 
     const { truckname, totalparcel, parcel } = req.body;
 
+    //Check all required fields
     if (!truckname || !totalparcel || !parcel) {
         return res.status(422).send({ error: 'All fields truckname,totalparcel and parcel are required.' });
     }
 
-
+    //Define Model
     let parcelData = new ParcelModel({
         truckname,
         totalparcel,
         parcel
     })
 
-    await ParcelModel.find({ truckname: truckname }, async function (err, data) {//Query first if existed then dont insert
+    //Query first if existed then dont insert
+    await ParcelModel.find({ truckname: truckname }, async function (err, data) {
         if (err) {
             console.log(err)
             return res.status(500).send({ error: 'Something went wrong.' });
